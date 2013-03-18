@@ -1,0 +1,26 @@
+TOOLCHAIN_TARGET="i686-pc-cygwin"
+inherit toolchain
+
+NAME="cygwin32-binutils"
+VERSION=2.23.51
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="Binutils for Cygwin 32bit toolchain"
+HOMEPAGE="http://www.gnu.org/software/binutils/"
+case ${VERSION} in
+*.*.[5-9][0-9])
+	SRC_URI="mirror://sourceware/binutils/snapshots/binutils.tar.bz2"
+	SRC_DIR="binutils-";;
+*)	SRC_URI="mirror://gnu/binutils/binutils-${VERSION}.tar.bz2" ;;
+esac
+PATCH_URI="
+	01-w32api-sysroot.patch
+"
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	# conflicts with native binutils
+	rm -fr ${D}/usr/lib/ ${D}/usr/share/{info,locale}/
+}
